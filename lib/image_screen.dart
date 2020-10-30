@@ -6,13 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:storage_path/storage_path.dart';
 import './class/file_model.dart';
 import './class/picture_name.dart';
-
-
+import 'main.dart';
+import './class/theme.dart';
 
 void main() => runApp(PictureScreen());
 
 class PictureScreen extends StatefulWidget {
-
   final PictureName pc;
   PictureScreen({Key key, @required this.pc}) : super(key: key);
 
@@ -22,6 +21,7 @@ class PictureScreen extends StatefulWidget {
 
 class _PictureScreenState extends State<PictureScreen> {
   String imagePath = "";
+
 
   @override
   void initState() {
@@ -37,10 +37,11 @@ class _PictureScreenState extends State<PictureScreen> {
       print(response);
       var imageList = response as List;
       List<FileModel> list =
-      imageList.map<FileModel>((json) => FileModel.fromJson(json)).toList();
+          imageList.map<FileModel>((json) => FileModel.fromJson(json)).toList();
 
       setState(() {
-        if(widget.pc.picture_name!='Unknown' || widget.pc.picture_name!='-1') {
+        if (widget.pc.picture_name != 'Unknown' ||
+            widget.pc.picture_name != '-1') {
           //print(list.length.toString());
           for (int i = 0; i < list.length; i++) {
             print(list[i].files.length.toString());
@@ -64,23 +65,36 @@ class _PictureScreenState extends State<PictureScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: darkTheme,//ThemeData.dark(),
       home: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_outlined),iconSize: 30.0,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyApp(),
+              ));
+
+            },
+          ),
           title: const Text('Picture'),
           centerTitle: true,
         ),
-        body: Center(
-          child: Container(
-            color: Colors.grey,
-            width: double.maxFinite,
-            height: double.maxFinite,
-            child: imagePath != ""
-                ? Image.file(
-              File(imagePath),
-              fit: BoxFit.contain,
-            )
-                : Image.asset('images/icon_not_found.png'),
+        body: SafeArea(
+          child: Center(
+            child: Container(
+              color: Colors.grey,
+              width: double.maxFinite,
+              height: double.maxFinite,
+              child: imagePath != ""
+                  ? Image.file(
+                      File(imagePath),
+                      fit: BoxFit.contain,
+                    )
+                  : Image.asset('images/icon_not_found.png'),
+            ),
           ),
         ),
       ),

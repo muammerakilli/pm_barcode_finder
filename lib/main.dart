@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import './class/picture_name.dart';
+import './class/theme.dart';
 import 'image_screen.dart';
 
 void main() => runApp(MyApp());
@@ -15,6 +16,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _scanBarcode = 'Unknown';
+
+
 
   @override
   void initState() {
@@ -47,7 +50,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: darkTheme,//ThemeData.dark(),
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Pennmenn Picture Finder'),
