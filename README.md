@@ -1,4 +1,4 @@
-# pm_barcode_finder
+# Pennmenn Picture Finder
 
 A new Flutter application.
 
