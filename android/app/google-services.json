@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "256847946718",
+    "project_id": "pm-barcode-finder",
+    "storage_bucket": "pm-barcode-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256847946718:android:ca7b794224fcc3743e734f",
+        "android_client_info": {
+          "package_name": "com.muammerakilli.pm_barcode_finder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256847946718-ng1av3ji5g3g19jf3ci8qkcg73u8ipd5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0RVrRaCkcEkao3aFsjjLRTDDtdEe9djs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256847946718-ng1av3ji5g3g19jf3ci8qkcg73u8ipd5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

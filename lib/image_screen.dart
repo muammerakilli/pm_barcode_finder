@@ -1,19 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter/services.dart';
-import 'package:storage_path/storage_path.dart';
-import './class/file_model.dart';
-import './class/picture_name.dart';
-import 'main.dart';
-import './class/theme.dart';
-
-void main() => runApp(PictureScreen());
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:google_fonts/google_fonts.dart';
 
 class PictureScreen extends StatefulWidget {
-  final PictureName pc;
-  PictureScreen({Key key, @required this.pc}) : super(key: key);
+  final String name;
+  PictureScreen({Key key, @required this.name}) : super(key: key);
 
   @override
   _PictureScreenState createState() => _PictureScreenState();
@@ -21,80 +13,57 @@ class PictureScreen extends StatefulWidget {
 
 class _PictureScreenState extends State<PictureScreen> {
   String imagePath = "";
+  String downloadURL;
+  bool isLoad = false;
+  bool isFind = false;
 
+  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
+
+  Future<void> getURL() async {
+    try {
+      downloadURL = await storage.ref('images/${widget.name}').getDownloadURL();
+      setState(() {
+        isLoad = isFind = true;
+      });
+    } catch (_) {
+      setState(() {
+        isLoad = true;
+        isFind = false;
+      });
+    }
+  }
 
   @override
   void initState() {
+    getURL();
     super.initState();
-    getImagesPath();
-  }
-
-  Future<void> getImagesPath() async {
-    String imagespath = "";
-    try {
-      imagespath = await StoragePath.imagesPath;
-      var response = jsonDecode(imagespath);
-      print(response);
-      var imageList = response as List;
-      List<FileModel> list =
-          imageList.map<FileModel>((json) => FileModel.fromJson(json)).toList();
-
-      setState(() {
-        if (widget.pc.picture_name != 'Unknown' ||
-            widget.pc.picture_name != '-1') {
-          //print(list.length.toString());
-          for (int i = 0; i < list.length; i++) {
-            print(list[i].files.length.toString());
-            for (int j = 0; j < list[i].files.length; j++) {
-              if (list[i].files[j].contains(widget.pc.picture_name)) {
-                imagePath = list[i].files[j];
-                break;
-              }
-            }
-          }
-        }
-      });
-    } on PlatformException {
-      imagespath = 'Failed to get path';
-    }
-
-    return imagespath;
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: darkTheme,//ThemeData.dark(),
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_outlined),iconSize: 30.0,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyApp(),
-              ));
-
-            },
-          ),
-          title: const Text('Picture'),
-          centerTitle: true,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Resim',
+          style: GoogleFonts.getFont('Lato', fontSize: 24, color: Colors.white),
         ),
-        body: SafeArea(
-          child: Center(
-            child: Container(
-              color: Colors.grey,
-              width: double.maxFinite,
-              height: double.maxFinite,
-              child: imagePath != ""
-                  ? Image.file(
-                      File(imagePath),
-                      fit: BoxFit.contain,
-                    )
-                  : Image.asset('images/icon_not_found.png'),
-            ),
+        centerTitle: true,
+        backgroundColor: Colors.blueGrey,
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Container(
+            color: Colors.grey,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: isLoad == true
+                ? isFind == true
+                    ? Image.network(
+                        downloadURL,
+                        fit: BoxFit.contain,
+                      )
+                    : Image.asset("images/icon_not_found.png")
+                : Center(child: CircularProgressIndicator()),
           ),
         ),
       ),
